@@ -443,12 +443,13 @@ EOT;
 
         $this->setupScript($script);
 
-        return parent::render()->with([
-            'forms'        => $this->buildRelatedForms(),
-            'template'     => $template,
+        $this->addVariables([
+            'forms' => $this->buildRelatedForms(),
+            'template' => $template,
             'template_fields' => $template_fields,
             'relationName' => $this->relationName,
-            'options'      => $this->options,
+            'options' => $this->options,
         ]);
+        return parent::render();
     }
 }
