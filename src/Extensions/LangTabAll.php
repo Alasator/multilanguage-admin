@@ -107,7 +107,7 @@ class LangTabAll extends Field
 
             if (is_array($column)) {
                 foreach ($column as $key => $name) {
-                    $rules[$name.$key] = $fieldRules;
+                    $rules[$name . $key] = $fieldRules;
                 }
 
                 $this->resetInputKey($input_only, $column);
@@ -153,7 +153,7 @@ class LangTabAll extends Field
     /**
      * Format validation attributes.
      *
-     * @param array  $input
+     * @param array $input
      * @param string $label
      * @param string $column
      *
@@ -165,7 +165,7 @@ class LangTabAll extends Field
 
         if (is_array($column)) {
             foreach ($column as $index => $col) {
-                $new[$col.$index] = $col;
+                $new[$col . $index] = $col;
             }
         }
 
@@ -177,7 +177,7 @@ class LangTabAll extends Field
             } else {
                 foreach ($new as $k => $val) {
                     if (Str::endsWith($key, ".$k")) {
-                        $attributes[$key] = $label."[$val]";
+                        $attributes[$key] = $label . "[$val]";
                     }
                 }
             }
@@ -236,7 +236,7 @@ class LangTabAll extends Field
                  *
                  * I don't know why a form need range input? Only can imagine is for range search....
                  */
-                $newKey = $name.$column[$name];
+                $newKey = $name . $column[$name];
 
                 /*
                  * set new key
@@ -267,18 +267,18 @@ class LangTabAll extends Field
     /**
      * Build a Nested form.
      *
-     * @param string   $column
+     * @param string $column
      * @param \Closure $builder
-     * @param null     $model
+     * @param null $model
      *
      * @return NestedForm
      */
-    protected function buildNestedForm($column, \Closure $builder, $model = null)
+    protected function buildNestedForm($column, \Closure $builder, $model = null, $language = 'uk')
     {
         if (Str::contains($column, '.')) {
-            $column = str_replace('.', '[', $column). ']';
+            $column = str_replace('.', '[', $column) . ']';
         }
-        $form = new NestedForm($column, $model);
+        $form = new NestedForm($column, $model, $language);
 
         $form->setForm($this->form);
 
@@ -306,7 +306,7 @@ class LangTabAll extends Field
 
         if (Str::contains($this->relationName, '.')) {
             $relationModelName = explode('.', $this->relationName)[0];
-            if(!empty($this->form->model()->{$relationModelName})){
+            if (!empty($this->form->model()->{$relationModelName})) {
                 return $this->form->model()->{$relationModelName}->translations()->getRelated()->getKeyName();
             } else {
                 return $this->form->model()->{$relationModelName}()->getRelated()->getKeyName();
@@ -319,9 +319,9 @@ class LangTabAll extends Field
     /**
      * Build Nested form for related data.
      *
+     * @return array
      * @throws \Exception
      *
-     * @return array
      */
     protected function buildRelatedForms()
     {
@@ -360,7 +360,7 @@ class LangTabAll extends Field
 
                 $model = $relation->getRelated()->replicate()->forceFill($data);
 
-                $forms[$key] = $this->buildNestedForm($this->column, $this->builder, $model)
+                $forms[$key] = $this->buildNestedForm($this->column, $this->builder, $model, $key)
                     ->fill($data);
             }
         } else {
@@ -372,7 +372,7 @@ class LangTabAll extends Field
 
                 $model = $relation->getRelated()->replicate()->forceFill($data);
 
-                $forms[$key] = $this->buildNestedForm($this->column, $this->builder, $model)
+                $forms[$key] = $this->buildNestedForm($this->column, $this->builder, $model, $key)
                     ->fill($data);
             }
         }
@@ -389,7 +389,7 @@ class LangTabAll extends Field
      */
     protected function setupScript($script)
     {
-        $method = 'setupScriptFor'.ucfirst($this->viewMode).'View';
+        $method = 'setupScriptFor' . ucfirst($this->viewMode) . 'View';
 
         call_user_func([$this, $method], $script);
     }
@@ -404,7 +404,7 @@ class LangTabAll extends Field
      */
     protected function setupScriptForTabView($templateScript)
     {
-         $script = <<<EOT
+        $script = <<<EOT
 
 if ($('.has-error').length) {
     $('.has-error').parent('.tab-pane').each(function () {
@@ -424,21 +424,21 @@ EOT;
     /**
      * Builder the `HasMany` field.
      *
+     * @return \Illuminate\View\View
      * @throws \Exception
      *
-     * @return \Illuminate\View\View
      */
     public function render()
     {
 
-        $builder=$this->buildNestedForm($this->column, $this->builder);
+        $builder = $this->buildNestedForm($this->column, $this->builder);
 
-        $template_fields=[];
+        $template_fields = [];
         list($template, $script/*$template_fields*/) = $builder
             ->getTemplateHtmlAndScript();
-        $f=$builder->fields();
-        foreach ( $f as $field){
-            $template_fields[]=$field;
+        $f = $builder->fields();
+        foreach ($f as $field) {
+            $template_fields[] = $field;
         }
 
         $this->setupScript($script);

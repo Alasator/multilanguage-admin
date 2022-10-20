@@ -11,10 +11,23 @@ namespace NitroLab\MultilanguageAdmin\Form;
 use Encore\Admin\Form\Field;
 use Encore\Admin\Form\NestedForm as EncoreNestedForm;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class NestedForm extends EncoreNestedForm
 {
+
+    public function __construct($relation, $model = null, $language = 'uk')
+    {
+        $this->relationName = $relation;
+
+        $this->model = $model;
+
+        $this->fields = new Collection();
+
+        $this->setKey($language);
+    }
+
     /**
      * Do prepare work before store and update.
      *
