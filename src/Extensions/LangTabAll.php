@@ -377,7 +377,7 @@ class LangTabAll extends Field
             }
         }
 
-        return array_reverse($forms);
+        return $forms;
     }
 
     /**
