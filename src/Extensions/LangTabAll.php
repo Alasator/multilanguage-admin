@@ -377,7 +377,12 @@ class LangTabAll extends Field
             }
         }
 
-        return $forms;
+        $orderedForms = [];
+        foreach (config('laravellocalization.localesOrder') as $key => $localization) {
+            $orderedForms[$localization] = $forms[$localization];
+        }
+        return $orderedForms;
+
     }
 
     /**

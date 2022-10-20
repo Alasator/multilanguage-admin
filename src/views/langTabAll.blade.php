@@ -47,7 +47,7 @@
                         </li>
                         @endforeach
                     @else
-                    <li class="@if ($locale == config('app.locale')) active @endif">
+                    <li class="@if ($locale == config('laravellocalization.localesOrder')[0]) active @endif">
                         <a href="#{{ str_replace('.', '-', $relationName) . '_' . $locale }}" data-toggle="tab">
                             {{ config('translatable.native_locale.' . $locale, $locale) }} <i class="fa fa-exclamation-circle text-red hide"></i>
                         </a>
