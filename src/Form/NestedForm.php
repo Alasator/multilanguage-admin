@@ -54,7 +54,7 @@ class NestedForm extends EncoreNestedForm
             $value = $this->fetchColumnValue($record, $columns);
 
             if (is_null($value)) {
-                continue;
+                Arr::set($prepared, $columns, null);
             }
 
             if (method_exists($field, 'prepare')) {
