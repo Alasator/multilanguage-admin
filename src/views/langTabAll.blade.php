@@ -12,23 +12,6 @@
         cursor: pointer;
         display: none;
     }
-
-    i.translate {
-        cursor: pointer;
-        position: absolute;
-        top: 10px;
-        right: 15%;
-    }
-
-    .translate:active {
-        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0.5);
-        -webkit-transform: rotate(45deg);
-        -moz-transform: rotate(45deg);
-        -ms-transform: rotate(45deg);
-        -o-transform: rotate(45deg);
-        transform: rotate(45deg);
-    }
-
 </style>
 @php if(stripos($column, '.')){
     $column = str_replace('.', '[', $column) . ']';
@@ -129,16 +112,9 @@
                                     $field->value(config('laravellocalization.localesOrder')[$key]);
                                 }
                             @endphp
-                            <div style="position: relative">
-                                {!! $field->render() !!}
-                                @if($locale == 'en' && !in_array($field->column(),['id','_remove_','locale']))
-                                    <i class="fa fa-refresh translate" data-id="{{$field->column()}}"></i>
-                                @endif
-                            </div>
+                            {!! $field->render() !!}
                         @endforeach
-                        <input type="hidden"
-                               name="{{$relationName}}[{{ config('laravellocalization.localesOrder')[$key] }}][loc]"
-                               value="{{ config('laravellocalization.localesOrder')[$key] }}">
+                        <input type="hidden" name="{{$relationName}}[{{ config('laravellocalization.localesOrder')[$key] }}][loc]" value="{{ config('laravellocalization.localesOrder')[$key] }}">
                     </div>
                 @endif
 
@@ -158,21 +134,3 @@
     </template>
 
 </div>
-<script>
-    $('.translate').click(function () {
-        var field = $(this).attr("data-id");
-        var values = $('input#' + field).val();
-        var input = $('input#' + field).closest('input');
-        if (input.length != 0 && values.length > 0) {
-            //  $(input[1]).val(values);
-            $.post(window.location.origin + "/api/translate", {text: values}, function (data) {
-                $(input[1]).val(data);
-            });
-
-        } else {
-            var textarea = $('textarea#' + field).closest('textarea');
-        }
-
-    })
-
-</script>
